@@ -3,20 +3,21 @@
 import numpy as np
 import pylab as pl
 # from sklearn.pls import PLSCanonical, PLSRegression, CCA
-from sklearn.pls import PLSCanonical, CCA
+from sklearn.cross_decomposition import PLSCanonical, CCA
 from sklearn.cross_decomposition import PLSRegression
-# X = [[0., 0., 1.], [1.,0.,0.], [2.,2.,2.], [2.,5.,4.]]
-# Y = [[0.1, -0.2], [0.9, 1.1], [6.2, 5.9], [11.9, 12.3]]
-# 
-# pls2 = PLSRegression(n_components=2)
-# pls2.fit(X, Y)
-# # print (pls2.fit(X, Y))
-# 
-# PLSRegression(copy=True, max_iter=500, n_components=2, scale=True,
-#         tol=1e-06)
-# Y_pred = pls2.predict(X)
-# 
-# print (Y_pred)
+
+X = [[0., 0., 1.], [1.,0.,0.], [2.,2.,2.], [2.,5.,4.]]
+Y = [[0.1, -0.2], [0.9, 1.1], [6.2, 5.9], [11.9, 12.3]]
+
+pls2 = PLSRegression(n_components=2)
+pls2.fit(X, Y)
+print (pls2.fit(X, Y))
+
+PLSRegression(copy=True, max_iter=500, n_components=2, scale=True,
+        tol=1e-06)
+Y_pred = pls2.predict(X)
+
+print (Y_pred)
 
 
 
@@ -26,6 +27,7 @@ from sklearn.cross_decomposition import PLSRegression
 # Dataset based latent variables model
 
 n = 500
+n_half = int(n/2)
 # 2 latents vars:
 l1 = np.random.normal(size=n)
 l2 = np.random.normal(size=n)
@@ -34,10 +36,12 @@ latents = np.array([l1, l1, l2, l2]).T
 X = latents + np.random.normal(size=4 * n).reshape((n, 4))
 Y = latents + np.random.normal(size=4 * n).reshape((n, 4))
 
-X_train = X[:n / 2]
-Y_train = Y[:n / 2]
-X_test = X[n / 2:]
-Y_test = Y[n / 2:]
+print (X.shape)
+print (Y.shape)
+X_train = X[ : ]
+X_test = X[ -n_half : ]
+Y_train = Y[ : -n_half]
+Y_test = Y[ -n_half : ]
 
 print ("Corr(X)")
 print (np.round(np.corrcoef(X.T), 2))
@@ -50,7 +54,7 @@ print (np.round(np.corrcoef(Y.T), 2))
 # Transform data
 # ~~~~~~~~~~~~~~
 plsca = PLSCanonical(n_components=2)
-plsca.fit(X_train, Y_train)
+# plsca.fit(X_train, Y_train)
 X_train_r, Y_train_r = plsca.transform(X_train, Y_train)
 X_test_r, Y_test_r = plsca.transform(X_test, Y_test)
 
